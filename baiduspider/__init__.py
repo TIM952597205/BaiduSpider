@@ -400,16 +400,13 @@ class BaiduSpider(BaseSpider):
         # 按时间筛选
         if type(time) == str:
             to = datetime.datetime.now()
-            from_ = datetime.datetime(
-                to.year, to.month, to.day, to.hour, to.minute, to.second, to.microsecond
-            )
             time_str_to_timedelta = {
-                "day": datetime.timedelta(days=-1),
-                "week": datetime.timedelta(days=-7),
-                "month": datetime.timedelta(days=-31),
-                "year": datetime.timedelta(days=-365),
+                "day": datetime.timedelta(days=1),
+                "week": datetime.timedelta(days=7),
+                "month": datetime.timedelta(days=31),
+                "year": datetime.timedelta(days=365),
             }
-            from_ = time_str_to_timedelta[time]
+            from_ = to - time_str_to_timedelta[time]
 
         elif type(time) == tuple or type(time) == list:
             from_ = time[0]
