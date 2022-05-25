@@ -1,5 +1,6 @@
 import json
 import math
+import re
 from datetime import datetime, time
 from html import unescape
 from time import localtime, strftime
@@ -150,7 +151,7 @@ class Parser(BaseSpider):
         # 预处理源码
         soup = BeautifulSoup(content, "html.parser")
         results = []
-        for res in soup.findAll("div", class_="result-op"):
+        for res in soup.findAll("div"):
             try:
                 if res["srcid"] in ["1599"]:
                     results.append(res)
@@ -163,6 +164,8 @@ class Parser(BaseSpider):
                 result["tpl"]
             except KeyError:
                 continue
+
+            original_link = result.get("mu")
             soup = BeautifulSoup(self._minify(str(result)), "html.parser")
             # 链接
             href = soup.find("a").get("href").strip()
@@ -274,6 +277,7 @@ class Parser(BaseSpider):
                         "des": des,
                         "origin": domain,
                         "url": href,
+                        "original_link": original_link,
                         "time": time,
                         "snapshot": snapshot,
                         "type": "result",
